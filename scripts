@@ -1,1 +1,43 @@
 
+#!/usr/bin/env python3
+
+"""
+check_service.py
+
+Simple operational health check for a web service.
+Used to verify availability of a platform endpoint.
+"""
+
+import requests
+import sys
+import time
+
+
+def check_service(url: str, timeout: int = 5) -> int:
+    """Send HTTP request and return exit code."""
+    try:
+        start = time.time()
+        response = requests.get(url, timeout=timeout)
+        latency = round((time.time() - start) * 1000, 2)
+
+        if response.status_code == 200:
+            print(f"✅ HEALTHY - {url}")
+            print(f"Status: {response.status_code}, Latency: {latency}ms")
+            return 0
+        else:
+            print(f"⚠️ UNHEALTHY - {url}")
+            print(f"Status: {response.status_code}")
+            return 1
+
+    except requests.exceptions.RequestException as e:
+        print(f"❌ ERROR - Cannot reach {url}")
+        print(e)
+        return 2
+
+
+if __name__ == "__main__":
+    # Replace this with your ALB DNS name when running
+    SERVICE_URL = "http://YOUR-ALB-DNS-NAME"
+
+    exit_code = check_service(SERVICE_URL)
+    sys.exit(exit_code)
