@@ -37,7 +37,7 @@ def check_service(url: str, timeout: int = 5) -> int:
 
 if __name__ == "__main__":
     # Replace this with your ALB DNS name when running
-    SERVICE_URL = "http://YOUR-ALB-DNS-NAME"
+    SERVICE_URL = "http://xxxxx.ap-northeast-1.elb.amazonaws.com"
 
     exit_code = check_service(SERVICE_URL)
     sys.exit(exit_code)
